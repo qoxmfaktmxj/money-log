@@ -1,0 +1,27 @@
+salary_march:
+  kind: income
+  amount: 3000000
+  happened_on: 2026-03-03
+  category: salary
+  memo: 3월 급여
+
+lunch_march:
+  kind: expense
+  amount: 12000
+  happened_on: 2026-03-05
+  category: food
+  memo: 점심 식사
+
+bus_march:
+  kind: expense
+  amount: 3500
+  happened_on: 2026-03-06
+  category: transport
+  memo: 버스 충전
+
+freelance_february:
+  kind: income
+  amount: 800000
+  happened_on: 2026-02-10
+  category: freelance
+  memo: 지난달 원고료

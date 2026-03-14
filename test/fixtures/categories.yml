@@ -1,0 +1,15 @@
+salary:
+  name: 급여
+  kind: income
+
+freelance:
+  name: 부업
+  kind: income
+
+food:
+  name: 식비
+  kind: expense
+
+transport:
+  name: 교통비
+  kind: expense

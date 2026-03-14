@@ -1,0 +1,47 @@
+<article class="card form-card">
+  <%= render "shared/form_errors", object: transaction %>
+
+  <%= form_with model: transaction do |form| %>
+    <div class="form-grid">
+      <div class="field">
+        <%= form.label :kind, "종류" %>
+        <%= form.select :kind, [["수입", "income"], ["지출", "expense"]], { prompt: "종류를 선택하세요" } %>
+      </div>
+
+      <div class="field">
+        <%= form.label :amount, "금액" %>
+        <%= form.number_field :amount, step: 0.01, min: 0, placeholder: "예: 15000" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :happened_on, "거래일" %>
+        <%= form.date_field :happened_on %>
+      </div>
+
+      <div class="field">
+        <%= form.label :category_id, "카테고리" %>
+        <%= form.select :category_id, options_for_select(categories.map { |category| ["#{kind_name(category.kind)} · #{category.name}", category.id] }, transaction.category_id), { prompt: "카테고리를 선택하세요" } %>
+        <p class="field-hint">카테고리의 종류와 거래 종류는 같아야 합니다.</p>
+      </div>
+
+      <div class="field field-wide">
+        <%= form.label :memo, "메모" %>
+        <%= form.text_area :memo, placeholder: "예: 회사 근처 점심" %>
+      </div>
+    </div>
+
+    <% if categories.empty? %>
+      <div class="empty-state">
+        먼저 카테고리를 만들어야 거래를 등록할 수 있습니다.
+        <div class="actions" style="justify-content: center; margin-top: 12px;">
+          <%= link_to "카테고리 만들기", new_category_path, class: "btn" %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="stack">
+      <%= form.submit transaction.persisted? ? "거래 저장" : "거래 만들기", disabled: categories.empty? %>
+      <%= link_to "취소", transaction.persisted? ? transaction_path(transaction) : transactions_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</article>

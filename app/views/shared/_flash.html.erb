@@ -1,0 +1,6 @@
+<% flash.each do |type, message| %>
+  <% next if message.blank? %>
+  <div class="flash-stack">
+    <div class="flash flash-<%= type %>"><%= message %></div>
+  </div>
+<% end %>

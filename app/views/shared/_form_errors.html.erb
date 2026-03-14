@@ -1,0 +1,10 @@
+<% if object.errors.any? %>
+  <div class="form-errors">
+    <h2>입력 내용을 확인해주세요.</h2>
+    <ul>
+      <% object.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

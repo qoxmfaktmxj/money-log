@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= app_title(content_for(:title)) %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="shell site-header__inner">
+        <div>
+          <%= link_to "MoneyLog", root_path, class: "brand" %>
+          <p class="site-header__subtitle">혼자 쓰기 좋은 단순한 가계부</p>
+        </div>
+
+        <nav class="nav">
+          <%= link_to "대시보드", root_path, class: "nav__link" %>
+          <%= link_to "거래 내역", transactions_path, class: "nav__link" %>
+          <%= link_to "카테고리", categories_path, class: "nav__link" %>
+        </nav>
+      </div>
+    </header>
+
+    <main class="shell page">
+      <%= render "shared/flash" %>
+      <%= yield %>
+    </main>
+  </body>
+</html>

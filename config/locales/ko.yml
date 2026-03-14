@@ -1,0 +1,21 @@
+ko:
+  date:
+    formats:
+      default: "%Y-%m-%d"
+      month: "%Y년 %-m월"
+  errors:
+    format: "%{attribute}%{message}"
+  activerecord:
+    models:
+      category: "카테고리"
+      transaction: "거래"
+    attributes:
+      category:
+        name: "이름"
+        kind: "종류"
+      transaction:
+        kind: "종류"
+        amount: "금액"
+        happened_on: "거래일"
+        category: "카테고리"
+        memo: "메모"
