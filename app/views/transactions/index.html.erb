@@ -13,29 +13,29 @@
 </section>
 
 <%= form_with url: transactions_path, method: :get, class: "filters" do |form| %>
-  <div class="field">
+  <div class="actions filters__actions">
+    <%= form.submit "조회" %>
+    <%= link_to "초기화", transactions_path, class: "btn btn-secondary" %>
+  </div>
+
+  <div class="field filters__month">
     <%= form.label :month, "월" %>
     <%= form.select :month, options_for_select(@available_months, @filters[:month]), { include_blank: "전체" } %>
   </div>
 
-  <div class="field">
+  <div class="field filters__category">
     <%= form.label :category_id, "카테고리" %>
     <%= form.select :category_id, options_for_select(@categories.map { |category| ["#{kind_name(category.kind)} · #{category.name}", category.id] }, @filters[:category_id]), { include_blank: "전체" } %>
   </div>
 
-  <div class="field">
+  <div class="field filters__kind">
     <%= form.label :kind, "종류" %>
     <%= form.select :kind, options_for_select([["수입", "income"], ["지출", "expense"]], @filters[:kind]), { include_blank: "전체" } %>
   </div>
 
-  <div class="field">
+  <div class="field filters__query">
     <%= form.label :query, "메모 검색" %>
     <%= form.search_field :query, value: @filters[:query], placeholder: "예: 점심" %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit "필터 적용" %>
-    <%= link_to "초기화", transactions_path, class: "btn btn-secondary" %>
   </div>
 <% end %>
 

@@ -330,9 +330,31 @@ tr:last-child td {
   border-radius: 18px;
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(140px, 0.7fr) minmax(220px, 1fr) minmax(120px, 0.5fr) minmax(220px, 1fr);
   margin-bottom: 20px;
   padding: 18px;
+}
+
+.filters__actions {
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+
+.filters__month {
+  min-width: 0;
+}
+
+.filters__category {
+  min-width: 0;
+}
+
+.filters__kind {
+  min-width: 0;
+}
+
+.filters__query {
+  min-width: 0;
 }
 
 .field {
