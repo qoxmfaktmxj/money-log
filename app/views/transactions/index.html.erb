@@ -13,11 +13,6 @@
 </section>
 
 <%= form_with url: transactions_path, method: :get, class: "filters" do |form| %>
-  <div class="actions filters__actions">
-    <%= form.submit "조회" %>
-    <%= link_to "초기화", transactions_path, class: "btn btn-secondary" %>
-  </div>
-
   <div class="field filters__month">
     <%= form.label :month, "월" %>
     <%= form.select :month, options_for_select(@available_months, @filters[:month]), { include_blank: "전체" } %>
@@ -36,6 +31,11 @@
   <div class="field filters__query">
     <%= form.label :query, "메모 검색" %>
     <%= form.search_field :query, value: @filters[:query], placeholder: "예: 점심" %>
+  </div>
+
+  <div class="actions filters__actions">
+    <%= form.submit "조회" %>
+    <%= link_to "초기화", transactions_path, class: "btn btn-secondary" %>
   </div>
 <% end %>
 
