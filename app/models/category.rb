@@ -24,7 +24,7 @@ class Category < ApplicationRecord
   def ensure_no_transactions
     return if transactions.none?
 
-    errors.add(:base, "거래를 먼저 삭제해야 합니다.")
+    errors.add(:base, "이 분류에 연결된 내역이 있어 바로 지울 수 없습니다.")
     throw :abort
   end
 end

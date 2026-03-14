@@ -16,7 +16,7 @@ class TransactionTest < ActiveSupport::TestCase
     transaction = Transaction.new(kind: "income", amount: 10_000, happened_on: Date.current, category: @categories[:food])
 
     assert_not transaction.valid?
-    assert_includes transaction.errors[:base], "카테고리 종류와 거래 종류는 같아야 합니다."
+    assert_includes transaction.errors[:base], "분류 구분과 내역 구분은 같아야 합니다."
   end
 
   test "월 필터와 메모 검색이 동작한다" do

@@ -3,25 +3,25 @@
 <section class="page-header">
   <div>
     <h1 class="page-header__title"><%= @category.name %></h1>
-    <p class="page-header__meta"><span class="<%= kind_badge_class(@category.kind) %>"><%= kind_name(@category.kind) %></span></p>
+    <p class="page-header__meta">이 분류에 연결된 내역 흐름을 모아봤어요. <span class="<%= kind_badge_class(@category.kind) %>"><%= kind_name(@category.kind) %></span></p>
   </div>
 
   <div class="actions">
-    <%= link_to "수정", edit_category_path(@category), class: "btn" %>
-    <%= link_to "목록으로", categories_path, class: "btn btn-secondary" %>
+    <%= link_to "수정하기", edit_category_path(@category), class: "btn" %>
+    <%= link_to "분류 목록", categories_path, class: "btn btn-secondary" %>
   </div>
 </section>
 
 <section class="layout-grid">
   <article class="card">
-    <h2>요약</h2>
+    <h2>분류 요약</h2>
     <div class="meta-list">
       <div class="meta-item">
-        <span class="subtle">누적 거래 수</span>
+        <span class="subtle">연결된 내역 수</span>
         <strong><%= @category.transactions.count %>건</strong>
       </div>
       <div class="meta-item">
-        <span class="subtle">누적 합계</span>
+        <span class="subtle">지금까지 합계</span>
         <strong class="<%= amount_class(@category.kind) %>"><%= money(@total_amount) %></strong>
       </div>
       <div class="meta-item">
@@ -32,14 +32,14 @@
   </article>
 
   <article class="card">
-    <h2>최근 거래</h2>
+    <h2>최근 내역</h2>
     <% if @recent_transactions.any? %>
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th>거래일</th>
-              <th>메모</th>
+              <th>날짜</th>
+              <th>내용</th>
               <th>금액</th>
             </tr>
           </thead>
@@ -47,7 +47,7 @@
             <% @recent_transactions.each do |transaction| %>
               <tr>
                 <td><%= l(transaction.happened_on) %></td>
-                <td><%= link_to transaction.memo.presence || "상세 보기", transaction_path(transaction) %></td>
+                <td><%= link_to transaction.memo.presence || "내역 자세히", transaction_path(transaction) %></td>
                 <td class="<%= amount_class(transaction.kind) %>"><%= money(transaction.amount) %></td>
               </tr>
             <% end %>
@@ -55,7 +55,7 @@
         </table>
       </div>
     <% else %>
-      <div class="empty-state">이 카테고리로 기록된 거래가 아직 없습니다.</div>
+      <div class="empty-state">이 분류에 연결된 내역이 아직 없어요.</div>
     <% end %>
   </article>
 </section>

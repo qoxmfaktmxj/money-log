@@ -21,7 +21,7 @@ class CategoriesController < ApplicationController
     @category = Category.new(category_params)
 
     if @category.save
-      redirect_to @category, success: "카테고리를 등록했습니다."
+      redirect_to @category, success: "분류를 저장했어요."
     else
       render :new, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class CategoriesController < ApplicationController
 
   def update
     if @category.update(category_params)
-      redirect_to @category, success: "카테고리를 수정했습니다."
+      redirect_to @category, success: "분류를 고쳤어요."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -37,9 +37,9 @@ class CategoriesController < ApplicationController
 
   def destroy
     if @category.destroy
-      redirect_to categories_path, success: "카테고리를 삭제했습니다."
+      redirect_to categories_path, success: "분류를 삭제했어요."
     else
-      redirect_to categories_path, alert: @category.errors.full_messages.to_sentence
+      redirect_to categories_path, alert: "이 분류에 연결된 내역이 있어 바로 지울 수 없어요. 연결된 내역을 먼저 정리해 주세요."
     end
   end
 

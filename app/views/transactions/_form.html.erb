@@ -1,47 +1,114 @@
 <article class="card form-card">
   <%= render "shared/form_errors", object: transaction %>
 
-  <%= form_with model: transaction do |form| %>
+  <%= form_with model: transaction, html: { data: { transaction_form: true } } do |form| %>
     <div class="form-grid">
       <div class="field">
-        <%= form.label :kind, "종류" %>
-        <%= form.select :kind, [["수입", "income"], ["지출", "expense"]], { prompt: "종류를 선택하세요" } %>
+        <%= form.label :kind, "구분" %>
+        <%= form.select :kind, [["수입", "income"], ["지출", "expense"]], { prompt: "구분을 선택하세요" }, data: { role: "kind-select" } %>
+        <p class="field-hint">먼저 수입인지 지출인지 고르면 분류를 더 쉽게 고를 수 있어요.</p>
       </div>
 
       <div class="field">
         <%= form.label :amount, "금액" %>
         <%= form.number_field :amount, step: 0.01, min: 0, placeholder: "예: 15000" %>
+        <p class="field-hint">원 단위로 적어도 되고, 필요하면 소수점도 입력할 수 있어요.</p>
       </div>
 
       <div class="field">
-        <%= form.label :happened_on, "거래일" %>
-        <%= form.date_field :happened_on %>
+        <%= form.label :happened_on, "날짜" %>
+        <%= form.date_field :happened_on, data: { role: "date-input" } %>
+        <div class="chip-row">
+          <button type="button" class="chip-button" data-fill-date="<%= Date.current %>">오늘</button>
+          <button type="button" class="chip-button" data-fill-date="<%= Date.yesterday %>">어제</button>
+        </div>
       </div>
 
       <div class="field">
-        <%= form.label :category_id, "카테고리" %>
-        <%= form.select :category_id, options_for_select(categories.map { |category| ["#{kind_name(category.kind)} · #{category.name}", category.id] }, transaction.category_id), { prompt: "카테고리를 선택하세요" } %>
-        <p class="field-hint">카테고리의 종류와 거래 종류는 같아야 합니다.</p>
+        <%= form.label :category_id, "분류" %>
+        <%= form.select :category_id, grouped_options_for_select(grouped_categories_for_select(categories), transaction.category_id), { prompt: "분류를 선택하세요" }, data: { role: "category-select" } %>
+        <p class="field-hint" data-role="category-hint">구분을 먼저 고르면 맞는 분류만 남겨서 보여드려요.</p>
       </div>
 
       <div class="field field-wide">
-        <%= form.label :memo, "메모" %>
-        <%= form.text_area :memo, placeholder: "예: 회사 근처 점심" %>
+        <%= form.label :memo, "내용" %>
+        <%= form.text_area :memo, placeholder: "예: 회사 근처 점심값" %>
       </div>
     </div>
 
     <% if categories.empty? %>
       <div class="empty-state">
-        먼저 카테고리를 만들어야 거래를 등록할 수 있습니다.
-        <div class="actions" style="justify-content: center; margin-top: 12px;">
-          <%= link_to "카테고리 만들기", new_category_path, class: "btn" %>
+        아직 분류가 없어서 내역을 저장할 수 없어요. 먼저 자주 쓰는 분류를 하나 만들어 주세요.
+        <div class="actions empty-state__actions">
+          <%= link_to "분류 추가", new_category_path, class: "btn" %>
         </div>
       </div>
     <% end %>
 
-    <div class="stack">
-      <%= form.submit transaction.persisted? ? "거래 저장" : "거래 만들기", disabled: categories.empty? %>
+    <div class="form-actions">
+      <%= form.submit "저장하기", disabled: categories.empty? %>
       <%= link_to "취소", transaction.persisted? ? transaction_path(transaction) : transactions_path, class: "btn btn-secondary" %>
     </div>
   <% end %>
 </article>
+
+<script>
+  (() => {
+    const setupTransactionForm = () => {
+      document.querySelectorAll("[data-transaction-form]").forEach((form) => {
+        if (form.dataset.bound === "true") return;
+        form.dataset.bound = "true";
+
+        const kindSelect = form.querySelector("[data-role='kind-select']");
+        const categorySelect = form.querySelector("[data-role='category-select']");
+        const hint = form.querySelector("[data-role='category-hint']");
+        const dateInput = form.querySelector("[data-role='date-input']");
+
+        const syncCategories = () => {
+          if (!kindSelect || !categorySelect) return;
+
+          const currentKind = kindSelect.value;
+          const selectedValue = categorySelect.value;
+          let selectedStillVisible = !currentKind;
+
+          categorySelect.querySelectorAll("optgroup").forEach((group) => {
+            const groupKind = group.label.includes("수입") ? "income" : "expense";
+            const visible = !currentKind || groupKind === currentKind;
+
+            group.disabled = !visible;
+            group.hidden = !visible;
+
+            group.querySelectorAll("option").forEach((option) => {
+              option.disabled = !visible;
+              option.hidden = !visible;
+
+              if (option.value === selectedValue && visible) {
+                selectedStillVisible = true;
+              }
+            });
+          });
+
+          if (currentKind && !selectedStillVisible) {
+            categorySelect.value = "";
+          }
+
+          if (hint) {
+            hint.textContent = currentKind === "income" ? "수입에 맞는 분류만 보여드리고 있어요." : currentKind === "expense" ? "지출에 맞는 분류만 보여드리고 있어요." : "구분을 먼저 고르면 맞는 분류만 남겨서 보여드려요.";
+          }
+        };
+
+        kindSelect?.addEventListener("change", syncCategories);
+        syncCategories();
+
+        form.querySelectorAll("[data-fill-date]").forEach((button) => {
+          button.addEventListener("click", () => {
+            if (dateInput) dateInput.value = button.dataset.fillDate;
+          });
+        });
+      });
+    };
+
+    document.addEventListener("turbo:load", setupTransactionForm);
+    document.addEventListener("DOMContentLoaded", setupTransactionForm);
+  })();
+</script>

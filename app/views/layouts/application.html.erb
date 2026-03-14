@@ -18,15 +18,15 @@
   <body>
     <header class="site-header">
       <div class="shell site-header__inner">
-        <div>
-          <%= link_to "MoneyLog", root_path, class: "brand" %>
-          <p class="site-header__subtitle">혼자 쓰기 좋은 단순한 가계부</p>
+        <div class="site-header__brand">
+          <%= link_to app_name, root_path, class: "brand" %>
+          <p class="site-header__subtitle">매일 쓰는 수입·지출 정리장</p>
         </div>
 
         <nav class="nav">
-          <%= link_to "대시보드", root_path, class: ["nav__link", ("nav__link--active" if current_page?(root_path))] %>
-          <%= link_to "거래 내역", transactions_path, class: ["nav__link", ("nav__link--active" if current_page?(transactions_path))] %>
-          <%= link_to "카테고리", categories_path, class: ["nav__link", ("nav__link--active" if current_page?(categories_path))] %>
+          <%= link_to "홈", root_path, class: ["nav__link", ("nav__link--active" if current_page?(root_path))] %>
+          <%= link_to "내역", transactions_path, class: ["nav__link", ("nav__link--active" if current_page?(transactions_path))] %>
+          <%= link_to "분류", categories_path, class: ["nav__link", ("nav__link--active" if current_page?(categories_path))] %>
         </nav>
       </div>
     </header>

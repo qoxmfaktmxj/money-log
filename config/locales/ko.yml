@@ -7,15 +7,15 @@ ko:
     format: "%{attribute}%{message}"
   activerecord:
     models:
-      category: "카테고리"
-      transaction: "거래"
+      category: "분류"
+      transaction: "내역"
     attributes:
       category:
-        name: "이름"
-        kind: "종류"
+        name: "분류 이름"
+        kind: "구분"
       transaction:
-        kind: "종류"
+        kind: "구분"
         amount: "금액"
-        happened_on: "거래일"
-        category: "카테고리"
-        memo: "메모"
+        happened_on: "날짜"
+        category: "분류"
+        memo: "내용"

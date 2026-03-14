@@ -4,18 +4,19 @@
   <%= form_with model: category do |form| %>
     <div class="form-grid">
       <div class="field">
-        <%= form.label :name, "이름" %>
-        <%= form.text_field :name, placeholder: "예: 식비" %>
+        <%= form.label :name, "분류 이름" %>
+        <%= form.text_field :name, placeholder: "예: 장보기" %>
+        <p class="field-hint">자주 쓰는 이름으로 적어두면 내역을 정리할 때 바로 떠올리기 쉬워요.</p>
       </div>
 
       <div class="field">
-        <%= form.label :kind, "종류" %>
-        <%= form.select :kind, [["수입", "income"], ["지출", "expense"]], { prompt: "종류를 선택하세요" } %>
+        <%= form.label :kind, "구분" %>
+        <%= form.select :kind, [["수입", "income"], ["지출", "expense"]], { prompt: "구분을 선택하세요" } %>
       </div>
     </div>
 
-    <div class="stack">
-      <%= form.submit category.persisted? ? "카테고리 저장" : "카테고리 만들기" %>
+    <div class="form-actions">
+      <%= form.submit "저장하기" %>
       <%= link_to "취소", category.persisted? ? category_path(category) : categories_path, class: "btn btn-secondary" %>
     </div>
   <% end %>

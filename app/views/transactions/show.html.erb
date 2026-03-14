@@ -1,21 +1,21 @@
-<% content_for :title, "거래 상세" %>
+<% content_for :title, "내역 보기" %>
 
 <section class="page-header">
   <div>
-    <h1 class="page-header__title">거래 상세</h1>
-    <p class="page-header__meta"><%= l(@transaction.happened_on) %>에 기록한 내역입니다.</p>
+    <h1 class="page-header__title">내역 보기</h1>
+    <p class="page-header__meta"><%= l(@transaction.happened_on) %>에 적어둔 살림 내역이에요.</p>
   </div>
 
   <div class="actions">
-    <%= link_to "수정", edit_transaction_path(@transaction), class: "btn" %>
-    <%= link_to "목록으로", transactions_path, class: "btn btn-secondary" %>
+    <%= link_to "수정하기", edit_transaction_path(@transaction), class: "btn" %>
+    <%= link_to "내역 목록", transactions_path, class: "btn btn-secondary" %>
   </div>
 </section>
 
 <article class="card form-card">
   <div class="meta-list">
     <div class="meta-item">
-      <span class="subtle">종류</span>
+      <span class="subtle">구분</span>
       <span class="<%= kind_badge_class(@transaction.kind) %>"><%= kind_name(@transaction.kind) %></span>
     </div>
     <div class="meta-item">
@@ -23,15 +23,15 @@
       <strong class="<%= amount_class(@transaction.kind) %>"><%= money(@transaction.amount) %></strong>
     </div>
     <div class="meta-item">
-      <span class="subtle">카테고리</span>
+      <span class="subtle">분류</span>
       <strong><%= link_to @transaction.category.name, category_path(@transaction.category) %></strong>
     </div>
     <div class="meta-item">
-      <span class="subtle">거래일</span>
+      <span class="subtle">날짜</span>
       <strong><%= l(@transaction.happened_on) %></strong>
     </div>
     <div class="meta-item">
-      <span class="subtle">메모</span>
+      <span class="subtle">내용</span>
       <strong><%= @transaction.memo.presence || "-" %></strong>
     </div>
   </div>

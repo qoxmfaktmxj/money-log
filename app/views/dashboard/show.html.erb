@@ -1,40 +1,41 @@
-<% content_for :title, "대시보드" %>
+<% content_for :title, "홈" %>
 
-<section class="page-header">
-  <div>
-    <h1 class="page-header__title">이번 달 요약</h1>
-    <p class="page-header__meta"><%= month_label(@current_month) %> 기준으로 수입과 지출을 정리했습니다.</p>
+<section class="hero-panel hero-panel--stacked">
+  <div class="hero-panel__body">
+    <p class="hero-panel__eyebrow"><%= month_label(@current_month) %></p>
+    <h1 class="page-header__title">이번 달 살림 한눈에</h1>
+    <p class="page-header__meta">들어온 돈, 나간 돈, 남은 금액을 지금 흐름에 맞춰 가볍게 살펴보세요.</p>
   </div>
 
-  <div class="actions">
-    <%= link_to "새 거래 추가", new_transaction_path, class: "btn" %>
-    <%= link_to "카테고리 관리", categories_path, class: "btn btn-secondary" %>
+  <div class="hero-panel__actions">
+    <%= link_to "추가", new_transaction_path, class: "btn" %>
+    <%= link_to "분류 관리", categories_path, class: "btn btn-secondary" %>
   </div>
 </section>
 
 <section class="summary-grid">
   <article class="card summary-card">
-    <p class="summary-card__label">이번 달 수입</p>
+    <p class="summary-card__label">이번 달 들어온 돈</p>
     <div class="summary-card__value money money-income"><%= money(@income_total) %></div>
   </article>
 
   <article class="card summary-card">
-    <p class="summary-card__label">이번 달 지출</p>
+    <p class="summary-card__label">이번 달 나간 돈</p>
     <div class="summary-card__value money money-expense"><%= money(@expense_total) %></div>
   </article>
 
   <article class="card summary-card">
-    <p class="summary-card__label">순잔액</p>
+    <p class="summary-card__label">이번 달 남은 금액</p>
     <div class="summary-card__value <%= @net_balance.negative? ? "money money-expense" : "money money-income" %>"><%= money(@net_balance) %></div>
   </article>
 </section>
 
 <section class="layout-grid">
   <article class="card">
-    <div class="stack">
+    <div class="section-header">
       <div>
-        <h2>최근 거래</h2>
-        <p class="subtle">가장 최근에 기록한 내역입니다.</p>
+        <h2>최근 내역</h2>
+        <p class="subtle">가장 최근에 적어둔 살림 내역이에요.</p>
       </div>
       <%= link_to "전체 보기", transactions_path, class: "btn btn-secondary" %>
     </div>
@@ -44,10 +45,10 @@
         <table>
           <thead>
             <tr>
-              <th>거래일</th>
-              <th>종류</th>
-              <th>카테고리</th>
-              <th>메모</th>
+              <th>날짜</th>
+              <th>구분</th>
+              <th>분류</th>
+              <th>내용</th>
               <th>금액</th>
             </tr>
           </thead>
@@ -56,7 +57,7 @@
               <tr>
                 <td><%= l(transaction.happened_on) %></td>
                 <td><span class="<%= kind_badge_class(transaction.kind) %>"><%= kind_name(transaction.kind) %></span></td>
-                <td><%= link_to transaction.category.name, transaction_path(transaction) %></td>
+                <td><%= link_to transaction.category.name, category_path(transaction.category) %></td>
                 <td><%= transaction.memo.presence || "-" %></td>
                 <td class="<%= amount_class(transaction.kind) %>"><%= money(transaction.amount) %></td>
               </tr>
@@ -65,41 +66,38 @@
         </table>
       </div>
     <% else %>
-      <div class="empty-state">아직 입력한 거래가 없습니다. 첫 거래를 추가해보세요.</div>
+      <div class="empty-state">아직 적어둔 내역이 없어요. 오늘 살림부터 가볍게 남겨보세요.</div>
     <% end %>
   </article>
 
   <article class="card">
-    <div class="stack">
+    <div class="section-header">
       <div>
-        <h2>카테고리별 합계</h2>
-        <p class="subtle">이번 달에 실제로 사용한 카테고리만 보여줍니다.</p>
+        <h2>분류별 사용 흐름</h2>
+        <p class="subtle">이번 달에 실제로 쓴 분류만 정리해서 보여드려요.</p>
       </div>
     </div>
 
     <% if @category_totals.any? %>
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>종류</th>
-              <th>카테고리</th>
-              <th>합계</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @category_totals.each do |row| %>
-              <tr>
-                <td><span class="<%= kind_badge_class(row[:kind]) %>"><%= kind_name(row[:kind]) %></span></td>
-                <td><%= row[:name] %></td>
-                <td class="<%= amount_class(row[:kind]) %>"><%= money(row[:total]) %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+      <% max_total = @category_totals.map { |row| row[:total].to_d }.max %>
+      <div class="category-bars">
+        <% @category_totals.each do |row| %>
+          <div class="category-bar">
+            <div class="category-bar__head">
+              <div class="category-bar__title">
+                <span class="<%= kind_badge_class(row[:kind]) %>"><%= kind_name(row[:kind]) %></span>
+                <strong><%= row[:name] %></strong>
+              </div>
+              <strong class="<%= amount_class(row[:kind]) %>"><%= money(row[:total]) %></strong>
+            </div>
+            <div class="progress-track">
+              <span class="progress-fill progress-fill--<%= row[:kind] %>" style="width: <%= category_bar_width(row[:total], max_total) %>%"></span>
+            </div>
+          </div>
+        <% end %>
       </div>
     <% else %>
-      <div class="empty-state">이번 달 거래가 아직 없습니다.</div>
+      <div class="empty-state">이번 달에는 아직 정리된 흐름이 없어요. 첫 내역을 남기면 여기부터 채워집니다.</div>
     <% end %>
   </article>
 </section>

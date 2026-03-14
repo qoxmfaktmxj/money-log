@@ -11,7 +11,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
-    assert_select "h1", "이번 달 요약"
+    assert_select "h1", "이번 달 살림 한눈에"
     assert_match "₩3,000,000", response.body
     assert_match "₩15,500", response.body
     assert_match "₩2,984,500", response.body

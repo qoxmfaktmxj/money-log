@@ -1,47 +1,48 @@
-<% content_for :title, "카테고리" %>
+<% content_for :title, "분류" %>
 
 <section class="page-header">
-  <div>
-    <h1 class="page-header__title">카테고리 관리</h1>
-    <p class="page-header__meta">수입과 지출 카테고리를 미리 정리해두면 거래 입력이 쉬워집니다.</p>
-  </div>
-
-  <div class="actions">
-    <%= link_to "새 카테고리", new_category_path, class: "btn" %>
-    <%= link_to "대시보드로", root_path, class: "btn btn-secondary" %>
+  <div class="page-header__body">
+    <h1 class="page-header__title">분류 관리</h1>
+    <div class="page-header__inline">
+      <p class="page-header__meta">자주 쓰는 수입·지출 분류를 미리 정리해두면 내역 입력이 더 쉬워져요.</p>
+      <div class="actions">
+        <%= link_to "추가", new_category_path, class: "btn btn-compact" %>
+      </div>
+    </div>
   </div>
 </section>
 
-<article class="card">
-  <% if @categories.any? %>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>이름</th>
-            <th>종류</th>
-            <th>거래 수</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @categories.each do |category| %>
-            <tr>
-              <td><%= link_to category.name, category_path(category) %></td>
-              <td><span class="<%= kind_badge_class(category.kind) %>"><%= kind_name(category.kind) %></span></td>
-              <td><%= category.transactions.size %>건</td>
-              <td>
-                <div class="table-actions">
-                  <%= link_to "수정", edit_category_path(category), class: "btn btn-secondary" %>
-                  <%= button_to "삭제", category_path(category), method: :delete, class: "btn btn-danger" %>
-                </div>
-              </td>
-            </tr>
+<% income_categories, expense_categories = @categories.partition(&:income?) %>
+
+<section class="category-columns">
+  <% [["수입 분류", income_categories, "income"], ["지출 분류", expense_categories, "expense"]].each do |title, items, kind| %>
+    <article class="card category-group">
+      <div class="section-header">
+        <div>
+          <h2><%= title %></h2>
+          <p class="subtle"><%= kind == "income" ? "들어오는 돈을 나눠 적는 분류예요." : "나가는 돈을 나눠 적는 분류예요." %></p>
+        </div>
+        <span class="<%= kind_badge_class(kind) %>"><%= items.size %>개</span>
+      </div>
+
+      <% if items.any? %>
+        <div class="category-list">
+          <% items.each do |category| %>
+            <div class="category-row">
+              <div class="category-row__main">
+                <strong><%= link_to category.name, category_path(category) %></strong>
+                <span class="subtle">연결된 내역 <%= category.transactions.size %>건</span>
+              </div>
+              <div class="table-actions">
+                <%= link_to "수정하기", edit_category_path(category), class: "btn btn-secondary" %>
+                <%= button_to "삭제하기", category_path(category), method: :delete, class: "btn btn-danger" %>
+              </div>
+            </div>
           <% end %>
-        </tbody>
-      </table>
-    </div>
-  <% else %>
-    <div class="empty-state">등록된 카테고리가 없습니다. 첫 카테고리를 만들어보세요.</div>
+        </div>
+      <% else %>
+        <div class="empty-state"><%= kind == "income" ? "아직 수입 분류가 없어요." : "아직 지출 분류가 없어요." %></div>
+      <% end %>
+    </article>
   <% end %>
-</article>
+</section>

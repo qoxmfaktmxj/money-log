@@ -1,6 +1,8 @@
-<% flash.each do |type, message| %>
-  <% next if message.blank? %>
+<% visible_flash = flash.to_h.select { |_type, message| message.present? } %>
+<% if visible_flash.any? %>
   <div class="flash-stack">
-    <div class="flash flash-<%= type %>"><%= message %></div>
+    <% visible_flash.each do |type, message| %>
+      <div class="flash flash-<%= type %>"><%= message %></div>
+    <% end %>
   </div>
 <% end %>

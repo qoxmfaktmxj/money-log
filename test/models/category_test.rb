@@ -22,6 +22,6 @@ class CategoryTest < ActiveSupport::TestCase
     category = @categories[:food]
 
     assert_not category.destroy
-    assert_includes category.errors.full_messages, "거래를 먼저 삭제해야 합니다."
+    assert_includes category.errors.full_messages, "이 분류에 연결된 내역이 있어 바로 지울 수 없습니다."
   end
 end

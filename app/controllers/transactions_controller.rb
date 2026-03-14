@@ -11,6 +11,9 @@ class TransactionsController < ApplicationController
     @transactions = @transactions.memo_contains(@filters[:query])
 
     apply_month_filter
+    @transaction_count = @transactions.count
+    @income_total = @transactions.income.sum(:amount)
+    @expense_total = @transactions.expense.sum(:amount)
   end
 
   def show; end
@@ -25,7 +28,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new(transaction_params)
 
     if @transaction.save
-      redirect_to @transaction, success: "거래를 등록했습니다."
+      redirect_to @transaction, success: "내역을 저장했어요."
     else
       render :new, status: :unprocessable_entity
     end
@@ -33,7 +36,7 @@ class TransactionsController < ApplicationController
 
   def update
     if @transaction.update(transaction_params)
-      redirect_to @transaction, success: "거래를 수정했습니다."
+      redirect_to @transaction, success: "내역을 고쳤어요."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -41,7 +44,7 @@ class TransactionsController < ApplicationController
 
   def destroy
     @transaction.destroy
-    redirect_to transactions_path, success: "거래를 삭제했습니다."
+    redirect_to transactions_path, success: "내역을 삭제했어요."
   end
 
   private

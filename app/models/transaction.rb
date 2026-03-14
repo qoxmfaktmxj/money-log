@@ -41,6 +41,6 @@ class Transaction < ApplicationRecord
     return if category.blank? || kind.blank?
     return if category.kind == kind
 
-    errors.add(:base, "카테고리 종류와 거래 종류는 같아야 합니다.")
+    errors.add(:base, "분류 구분과 내역 구분은 같아야 합니다.")
   end
 end
